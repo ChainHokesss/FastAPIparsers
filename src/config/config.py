@@ -13,6 +13,7 @@ class Service(BaseSettings):
         env_prefix = CONFIG_PREFIX
         env_file = '.env'
 
+
 class Mongo(BaseSettings):
     username: str
     password: str
@@ -20,6 +21,7 @@ class Mongo(BaseSettings):
     class Config:
         env_prefix = CONFIG_PREFIX + "MONGO_"
         env_file = '.env'
+
 
 class Config:
     service: Service = Service()
