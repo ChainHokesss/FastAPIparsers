@@ -1,12 +1,19 @@
 from fastapi import FastAPI
 
+from src.config import Config
+
 
 class ContainerGeneral:
     def __init__(self):
-        self.__app = None
+        self._app = FastAPI(
+            title="FastAPIparsers"
+        )
+        self._config = Config()
 
     @property
     def app(self):
-        return FastAPI(
-            title="FastAPIparsers"
-        )
+        return self._app
+
+    @property
+    def config(self):
+        return self._config
