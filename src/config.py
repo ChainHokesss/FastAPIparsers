@@ -6,4 +6,5 @@ class Config(BaseSettings):
     host: str = '0.0.0.0'
     reload: bool = True
 
+
 config = Config()
