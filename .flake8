@@ -4,7 +4,7 @@ exclude =
     .github,
     __pycache__,
     .cache,
-    venv,
+    env,
     migrations
 max-complexity = 10
 max-line-length=121
