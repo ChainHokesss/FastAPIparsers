@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from src.config import Config
+from src.config.config import Config
 
 
 class ContainerGeneral:

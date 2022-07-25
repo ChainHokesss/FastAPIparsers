@@ -25,4 +25,4 @@ class Mongo(BaseSettings):
 
 class Config:
     service: Service = Service()
-    mongo: Mongo = Mongo
+    mongo: Mongo = Mongo()
