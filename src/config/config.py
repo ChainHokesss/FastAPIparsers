@@ -17,6 +17,8 @@ class Service(BaseSettings):
 class Mongo(BaseSettings):
     username: str
     password: str
+    host: str
+    port: int
 
     class Config:
         env_prefix = CONFIG_PREFIX + "MONGO_"
