@@ -1,7 +1,10 @@
 import uvicorn
 
 from src.app import container_general
+from src.routers.lamoda import router as health_router
 
+
+container_general.app.include_router(health_router)
 
 if __name__ == '__main__':
     uvicorn.run(
