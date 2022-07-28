@@ -18,10 +18,10 @@ from pydantic import BaseModel
 class ProductDto(BaseModel):
     brand: str
     description: str
-    price: float
+    price: str
     sex: str
     type: str
 
 
 class ProductDbDto(ProductDto):
-    id: str
+    _id: str

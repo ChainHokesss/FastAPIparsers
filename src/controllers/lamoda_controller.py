@@ -10,8 +10,14 @@ class LamodaController:
     def collection(self):
         return self._collection
 
-    def create(self, product) -> str:
-        return str(self.collection.insert_one(product.dict()).inserted_id)
+    def create(self, product=None, data: dict = None) -> str:
+        product_data = {}
+        if data:
+            product_data = data
+        if product:
+            product_data = product.dict()
+
+        return str(self.collection.insert_one(product_data).inserted_id)
 
     def get(self, _id: str):
         data = self.collection.find_one({'_id': ObjectId(_id)})
