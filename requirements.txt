@@ -6,3 +6,4 @@ requests
 beautifulsoup4
 pymongo
 kafka-python
+twitchAPI

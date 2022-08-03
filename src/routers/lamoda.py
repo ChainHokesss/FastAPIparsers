@@ -26,10 +26,10 @@ def get_product_list() -> List[ProductDbDto]:
     return container_controller.lamoda.get_list()
 
 
-# @router.post('/test-kafka')
-# def test_kafka_send(data: str):
-#     container_parser.lamoda.send_task(data)
-#     return "sd"
+@router.post('/test-kafka')
+def test_kafka_send(data: str):
+    container_parser.lamoda.send_task(data)
+    return "sd"
 #
 # @router.get('/test-kafka-get')
 # def test_kafka_get():
