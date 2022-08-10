@@ -21,6 +21,11 @@ def get_product(_id: str) -> ProductDbDto:
     return container_controller.lamoda.get(_id)
 
 
+@router.put('/update/{_id}', response_model=ProductDbDto)
+def update_product(_id: str, instance: ProductDto) -> ProductDbDto:
+    return container_controller.lamoda.update(_id, instance)
+
+
 @router.get('/get-list', response_model=List[ProductDbDto])
 def get_product_list() -> List[ProductDbDto]:
     return container_controller.lamoda.get_list()

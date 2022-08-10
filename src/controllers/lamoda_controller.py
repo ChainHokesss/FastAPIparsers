@@ -10,8 +10,21 @@ class LamodaController:
     def collection(self):
         return self._collection
 
-    def create(self, product) -> str:
-        return str(self.collection.insert_one(product.dict()).inserted_id)
+    async def create_list(self, product_list: list):
+        self.collection.insert_many(product_list)
+
+    def update(self, _id, instance):
+        self.collection.update_one({'_id': ObjectId(_id)}, {'$set': instance.__dict__})
+        return {'_id': _id, **instance.__dict__}
+
+    def create(self, product=None, data: dict = None) -> str:
+        product_data = {}
+        if data:
+            product_data = data
+        if product:
+            product_data = product.dict()
+
+        return str(self.collection.insert_one(product_data).inserted_id)
 
     def get(self, _id: str):
         data = self.collection.find_one({'_id': ObjectId(_id)})
