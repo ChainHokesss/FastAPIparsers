@@ -1,7 +1,7 @@
-import requests
 from bs4 import BeautifulSoup
+import httpx
 
-from src.dao.kafka import Kafka
+from src.dao.kafka import KafkaHandler
 from src.app.container_controller import ContainerController
 from src.config.config import Config
 
@@ -9,11 +9,11 @@ from src.config.config import Config
 class LamodaParser:
     def __init__(
             self,
-            kafka: Kafka,
+            kafka: KafkaHandler,
             config: Config,
             container_controller: ContainerController
     ):
-        self._kafka: Kafka = kafka
+        self._kafka: KafkaHandler = kafka
         self._config: Config = config
         self._container_controller = container_controller
 
@@ -29,26 +29,20 @@ class LamodaParser:
     def kafka(self):
         return self._kafka
 
-    def send_task(self, message):
-        self.kafka.send_message(message)
-
-    def get_task(self):
-        return self.kafka.get_message()
-
-    def parse_products(self, url, base_data):
+    async def parse_products(self, url, base_data):
         page_number = 1
-
+        prod_list = []
         while True:
             url += str(page_number)
-
-            request = requests.get(url)
+            async with httpx.AsyncClient() as client:
+                request = await client.get(url)
             soup = BeautifulSoup(request.text)
             product_div_list = soup.findAll('div', class_='x-product-card__card')
 
             page_number += 1
 
             if len(product_div_list) == 0:
-                break
+                return prod_list
 
             for product_div in product_div_list:
                 data = {}
@@ -59,24 +53,24 @@ class LamodaParser:
                 desc = product_div.find('div', class_='x-product-card-description__product-name')
                 data['description'] = desc.text
                 data = {**data, **base_data}
+                prod_list.append(data)
+                # self.container_controller.lamoda.create(data=data)
 
-                self.container_controller.lamoda.create(data=data)
-
-            if page_number == 2:
-                break
-
-    def lamoda_parse(self):
-        self.parse_products(
+    async def lamoda_parse(self):
+        list1 = await self.parse_products(
             url=self.config.lamoda_urls.women_clothes_url,
             base_data={
                 'sex': 'women',
                 'type': 'clothes'
             }
         )
-        self.parse_products(
+
+        list2 = await self.parse_products(
             url=self.config.lamoda_urls.men_clothes_url,
             base_data={
                 'sex': 'men',
                 'type': 'clothes'
             }
         )
+        await self.container_controller.lamoda.create_list(list1)
+        await self.container_controller.lamoda.create_list(list2)
